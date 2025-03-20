@@ -7,59 +7,58 @@
       <title>Mateusz's Market - Ordering Website</title>
 
       <script type="text/javascript">
-         function placeOrder() {
-            window.alert("Welcome to Mateusz's Market! Please place your order.");
+         window.alert("Welcome to Mateusz's Market! Please place your order.");
 
-            var name = window.prompt("Please enter your name:", "Customer");
-            var item = window.prompt("Please enter the item you want to order:", "Item");
-            var quantity = window.prompt("Please enter the quantity (1-99):", "1");
+         var name = window.prompt("Please enter your name:", "Customer");
+         var item = window.prompt("Please enter the item you want to order:", "Item");
+         var quantity = window.prompt("Please enter the quantity (1-99):", "1");
 
-            quantity = parseInt(quantity);
+         quantity = parseInt(quantity);
 
-            if (quantity < 1 || quantity > 99 || isNaN(quantity)) {
-               quantity = 1;
-               window.alert("Invalid quantity! Defaulting to 1.");
-            }
-
-            var now = new Date();
-            var hour = now.getHours();
-            var greeting;
-
-            if (hour < 12) {
-               greeting = "Good Morning";
-            } else if (hour < 18) {
-               greeting = "Good Afternoon";
-            } else {
-               greeting = "Good Evening";
-            }
-
-            var arrivalDate = new Date();
-            arrivalDate.setDate(now.getDate() + 7);
-
-            var options = { year: 'numeric', month: 'long', day: 'numeric' };
-            var formattedArrivalDate = arrivalDate.toLocaleDateString('en-US', options);
-
-            var outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = `
-               <h1>${greeting}, ${name}!</h1>
-               <p>Thank you for ordering ${quantity} ${item}(s) from Mateusz's Market.</p>
-               <p>Your order will arrive on ${formattedArrivalDate}.</p>
-            `;
-
-            var placeAnother = window.confirm("Would you like to place another order?");
-            if (placeAnother) {
-               placeOrder();
-            } else {
-               outputDiv.innerHTML += "<p>Thank you for shopping at Mateusz's Market. Have a great day!</p>";
-            }
+         if (quantity < 1 || quantity > 99 || isNaN(quantity)) {
+            quantity = 1;
+            window.alert("Invalid quantity! Defaulting to 1.");
          }
 
-         placeOrder();
+         var now = new Date();
+         var hour = now.getHours();
+         var greeting;
+
+         if (hour < 12) {
+            greeting = "Good Morning";
+         } else if (hour < 18) {
+            greeting = "Good Afternoon";
+         } else {
+            greeting = "Good Evening";
+         }
+
+         var arrivalDate = new Date();
+         arrivalDate.setDate(now.getDate() + 7);
+
+         var options = { year: 'numeric', month: 'long', day: 'numeric' };
+         var formattedArrivalDate = arrivalDate.toLocaleDateString('en-US', options);
+
+         // output
+         var outputDiv = document.getElementById("output");
+
+         // append each message
+         var heading = document.createElement("h1");
+         heading.textContent = greeting + ", " + name + "!";
+         outputDiv.appendChild(heading);
+
+         var orderMessage = document.createElement("p");
+         orderMessage.textContent = "Thank you for ordering " + quantity + " " + item + "(s) from Mateusz's Market.";
+         outputDiv.appendChild(orderMessage);
+
+         var arrivalMessage = document.createElement("p");
+         arrivalMessage.textContent = "Your order will arrive on " + formattedArrivalDate + ".";
+         outputDiv.appendChild(arrivalMessage);
       </script>
    </head>
 
    <body>
       <div id="output">
+         <!-- Output will be displayed here -->
       </div>
    </body>
 </html>
