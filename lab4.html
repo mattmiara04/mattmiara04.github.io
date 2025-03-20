@@ -12,7 +12,7 @@
             // 1. Alert
             window.alert("Welcome to Mateusz's Market! Please place your order.");
 
-            // 2. Prompy
+            // 2. Prompt
             var name = window.prompt("Please enter your name:", "Customer");
             var item = window.prompt("Please enter the item you want to order:", "Item");
             var quantity = window.prompt("Please enter the quantity (1-99):", "1");
@@ -21,8 +21,8 @@
             quantity = parseInt(quantity);
 
             if (quantity < 1 || quantity > 99 || isNaN(quantity)) {
-               quantity = 1; // Default to 1 if invalid input
-               window.alert("Invalid quantity! Defaulting to 1.");
+               quantity = 1; // Default
+               window.alert("Invalid entry default to 1.");
             }
 
             var now = new Date();
