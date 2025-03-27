@@ -7,44 +7,45 @@
     <title>Campbell's Soup Registration</title>
     <script type="text/javascript">
         function registerUser() {
-            // Read form data exactly as in your example
+            // Read form data
             var elements = document.getElementById("regForm").elements;
             var formData = {};
             
             Array.from(elements).forEach(function(element) {
-                if (element.name) {
-                    formData[element.name] = element.value;
-                }
+                if (element.name) formData[element.name] = element.value;
             });
             
-            // Simple validation
-            if (!formData.firstName || !formData.lastName || !formData.email) {
-                alert("Please fill all fields");
+            // Validate
+            if (!formData.firstName || !formData.lastName || !formData.email || !formData.soupType) {
+                alert("Please complete all fields");
                 return;
             }
             
             // Display results
-            var result = "Registered: " + formData.firstName + " " + formData.lastName + 
-                         "\nEmail: " + formData.email + 
-                         "\nFavorite Soup: " + formData.soupType;
-            
-            document.getElementById("result").textContent = result;
+            document.getElementById("result").innerHTML = 
+                "Thank you, " + formData.firstName + "!<br>" +
+                "You've registered for: " + formData.soupType + " Soup Club";
         }
     </script>
 </head>
 <body>
-    <h1>Soup Club Registration</h1>
+    <h1>Campbell's Soup Club</h1>
     <form id="regForm">
         First name: <input type="text" name="firstName"><br>
         Last name: <input type="text" name="lastName"><br>
         Email: <input type="text" name="email"><br>
         Favorite Soup:
         <select name="soupType">
+            <option value="">-- Select --</option>
+            <option value="Cream of Mushroom">Cream of Mushroom</option>
+            <option value="Cream of Chicken">Cream of Chicken</option>
             <option value="Tomato">Tomato</option>
             <option value="Chicken Noodle">Chicken Noodle</option>
+            <option value="Cheddar Cheese">Cheddar Cheese</option>
+            <option value="French Onion">French Onion</option>
         </select><br>
-        <button type="button" onclick="registerUser()">Submit</button>
+        <button type="button" onclick="registerUser()">Join Club</button>
     </form>
-    <pre id="result"></pre>
+    <div id="result"></div>
 </body>
 </html>
