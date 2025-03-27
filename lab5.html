@@ -36,17 +36,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Campbell's Soup Club</h1>
+        <h1>Campbell's Soup Registration</h1>
         
+ <div class="container">
         <div class="row">
             <div class="col-md-8">
                 <form id="regForm">
-                    First name: <input type="text" name="firstName" class="form-control mb-2"><br>
-                    Last name: <input type="text" name="lastName" class="form-control mb-2"><br>
-                    Email: <input type="text" name="email" class="form-control mb-2"><br>
-                    Password: <input type="password" name="password" class="form-control mb-2"><br>
+                    First name: <input type="text" name="firstName"><br>
+                    Last name: <input type="text" name="lastName"><br>
+                    Email: <input type="text" name="email"><br>
                     Favorite Soup:
-                    <select name="soupType" class="form-select mb-3">
+                    <select name="soupType">
                         <option value="">-- Select --</option>
                         <option value="Cream of Mushroom">Cream of Mushroom</option>
                         <option value="Cream of Chicken">Cream of Chicken</option>
@@ -55,14 +55,13 @@
                         <option value="Cheddar Cheese">Cheddar Cheese</option>
                         <option value="French Onion">French Onion</option>
                     </select><br>
-                    <button type="button" onclick="registerUser()" class="btn btn-primary">Join Club</button>
+                    <button type="button" onclick="registerUser()">Join Club</button>
                 </form>
-                <div id="result" class="mt-3"></div>
+                <div id="result"></div>
             </div>
          
             <div class="col-md-4">
                 <img src="campbell-soup.jpg" alt="Bowl of Campbell's Soup" class="img-fluid rounded">
-                <p class="mt-2">Join our soup lovers community today!</p>
             </div>
         </div>
     </div>
