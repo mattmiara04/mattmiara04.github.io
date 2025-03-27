@@ -1,1 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Campbell's Soup Registration</title>
+    <script type="text/javascript">
+        function registerUser() {
+            // Read form data exactly as in your example
+            var elements = document.getElementById("regForm").elements;
+            var formData = {};
+            
+            Array.from(elements).forEach(function(element) {
+                if (element.name) {
+                    formData[element.name] = element.value;
+                }
+            });
+            
+            // Simple validation
+            if (!formData.firstName || !formData.lastName || !formData.email) {
+                alert("Please fill all fields");
+                return;
+            }
+            
+            // Display results
+            var result = "Registered: " + formData.firstName + " " + formData.lastName + 
+                         "\nEmail: " + formData.email + 
+                         "\nFavorite Soup: " + formData.soupType;
+            
+            document.getElementById("result").textContent = result;
+        }
+    </script>
+</head>
+<body>
+    <h1>Soup Club Registration</h1>
+    <form id="regForm">
+        First name: <input type="text" name="firstName"><br>
+        Last name: <input type="text" name="lastName"><br>
+        Email: <input type="text" name="email"><br>
+        Favorite Soup:
+        <select name="soupType">
+            <option value="Tomato">Tomato</option>
+            <option value="Chicken Noodle">Chicken Noodle</option>
+        </select><br>
+        <button type="button" onclick="registerUser()">Submit</button>
+    </form>
+    <pre id="result"></pre>
+</body>
+</html>
