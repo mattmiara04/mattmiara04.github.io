@@ -7,7 +7,7 @@
     <title>Campbell's Soup Registration</title>
     <script type="text/javascript">
         function registerUser() {
-            // Read form data
+            // Read form 
             var elements = document.getElementById("regForm").elements;
             var formData = {};
             
@@ -21,7 +21,7 @@
                 return;
             }
             
-            // Display results
+            // Display
             document.getElementById("result").innerHTML = 
                 "Thank you, " + formData.firstName + "!<br>" +
                 "You are successfuly registered for " + formData.soupType + " Soup Club";
@@ -47,5 +47,9 @@
         <button type="button" onclick="registerUser()">Join Club</button>
     </form>
     <div id="result"></div>
+</div>
+<div class="campbell-soup-container">
+            <img src="campbell-soup.jpg" alt="Bowl of Campbell's Soup" class="soup-image">
+        </div>
 </body>
 </html>
