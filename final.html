@@ -16,6 +16,24 @@
             align-items: center;
             text-align: center;
         }
+        /* Gradient Jumbotron */
+        .jumbotron {
+            background: linear-gradient(135deg, 
+                #000000,  /* Black */
+                #252525,  /* Dark gray 1 */
+                #3d3d3d,  /* Dark gray 2 */
+                #252525,  /* Dark gray 1 */
+                #000000); /* Black */
+            background-size: 300% 300%;
+            animation: gradientShift 15s ease infinite;
+            border: 2px solid #333;
+            width: 100%;
+            margin: 0;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
         .title {
             color: #ff0000;
             font-size: 5em;
@@ -33,23 +51,27 @@
             font-size: 1.3em;
             border-radius: 0;
             font-weight: bold;
+            background-color: rgba(255, 0, 0, 0.8);
+            border: none;
+        }
+        .btn-endpoint:hover {
+            background-color: #ff0000;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">NoSkip</h1>
-        <p class="subtitle">Your no-excuses fitness tracker</p>
-        <div>
-            <!-- Button 1: Links to planner page (exercise list endpoint) -->
-            <a href="planner.html" class="btn btn-danger btn-endpoint">
-                Workout Planner
-            </a>
-            
-            <!-- Button 2: Links to instructions page (exercise details endpoint) -->
-            <a href="instructions.html" class="btn btn-danger btn-endpoint">
-                Exercise Instructions
-            </a>
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="title">NoSkip</h1>
+            <p class="subtitle">Your no-excuses fitness tracker</p>
+            <div>
+                <a href="planner.html" class="btn btn-endpoint">
+                    Workout Planner
+                </a>
+                <a href="instructions.html" class="btn btn-endpoint">
+                    Exercise Instructions
+                </a>
+            </div>
         </div>
     </div>
 </body>
