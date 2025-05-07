@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Workout Pro</title>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Custom CSS (optional) -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Custom Styling -->
+    <style>
+        body{
+            background-color: #8ad4ff;
+            color:white;
+        }
+        .jumbotron{
+            background-color: #8ad4ff;
+            color:white;
+            border: 2px solid #08a4ff;
+        }
+        .navbar{
+            background-color: #08a4ff;
+            border: 3px solid #08a4ff;
+        }
+         .navbar-default .navbar-nav>li>a {
+            color: white;
+        }
+        .navbar-default .navbar-nav>li>a:hover {
+            color: #8ad4ff;
+        }
+        .list-group-item {
+            background-color: #8ad4ff;
+            color: white;
+            border: 1px solid #08a4ff;
+        }
+        .img-rounded {
+            border: 2px solid #08a4ff;
+        } 
+    </style>
+    <!-- latest jQuery library -->
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <!-- Latest compiled Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class = "container">
+        <!--Jumbotron-->
+        <div class = "jumbotron">
+            <h1>Workout Pro</h1>
+            <p>Your personal fitness guide to building strength and endurance. Discover exercises tailored to your goals.</p>
+        </div>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Workout Pro</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="exercises.html">Exercises</a></li>
+                </ul>
+            </div>
+        </nav>
 
+        <div class="row">
+            <div class="col-md-9">
+                <h1>Essential Workout Principles</h1>
+                <ul class="list-group">
+                    <li class="list-group-item">Consistency is key - aim for at least 3 workouts per week.</li>
+                    <li class="list-group-item">Focus on proper form to prevent injuries and maximize results.</li>
+                    <li class="list-group-item">Combine strength training with cardio for balanced fitness.</li>
+                    <li class="list-group-item">Gradually increase weight or resistance to continue progressing.</li>
+                    <li class="list-group-item">Allow adequate rest between workouts for muscle recovery.</li>
+                    <li class="list-group-item">Stay hydrated and maintain proper nutrition to fuel your workouts.</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <img src="workout-image.jpg" class="img-rounded img-responsive" alt="Workout">
+                <p>Proper form and technique are essential for effective training.</p>
+            </div>
+        </div>
+
+        <hr>
+        <p>Last updated: June 2023 | Created by: Your Name</p>
+    </div>
+</body>
+</html>
