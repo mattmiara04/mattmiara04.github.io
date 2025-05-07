@@ -8,18 +8,31 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- Custom Styling -->
     <style>
-        body{
+        body {
             background-color: #121212;
             color: #e0e0e0;
         }
-        .jumbotron{
-            background-color: #1e1e1e;
-            color: #ffffff;
+        .jumbotron {
+            background: linear-gradient(135deg, #000000, #1a1a1a, #3d3d3d, #ffffff);
+            background-size: 300% 300%;
+            animation: gradientShift 12s ease infinite;
+            text-align: center; /* Center text */
+            padding: 80px 0; /* More vertical padding */
+            margin-top: 20px;
             border: 2px solid #333;
-            padding-top: 40px;  /* Added top padding */
-            margin-top: 20px;    /* Extra spacing from navbar */
         }
-        .navbar{
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .jumbotron h1 {
+            color: #ff0000; /* Red text */
+            font-size: 4em; /* Larger text */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        .navbar {
             background-color: #1a1a1a;
             border: 3px solid #333;
         }
@@ -51,10 +64,10 @@
 </head>
 <body>
     <div class="container">
-        <!-- Jumbotron with NoSkip title -->
+        <!-- Jumbotron with centered red "NoSkip" -->
         <div class="jumbotron">
             <h1>NoSkip</h1>
-            <p>Never miss a workout with your personal fitness trainer.</p>
+            <p>Your personal fitness commitment tracker</p>
         </div>
         
         <!-- Navigation Bar -->
@@ -72,19 +85,18 @@
 
         <div class="row">
             <div class="col-md-9">
-                <h1>Essential Workout Principles</h1>
+                <h1>Workout Principles</h1>
                 <ul class="list-group">
-                    <li class="list-group-item">Consistency is key - aim for at least 3 workouts per week.</li>
-                    <li class="list-group-item">Focus on proper form to prevent injuries.</li>
-                    <li class="list-group-item">Combine strength training with cardio.</li>
-                    <li class="list-group-item">Gradually increase weight or resistance.</li>
-                    <li class="list-group-item">Allow adequate rest between workouts.</li>
-                    <li class="list-group-item">Stay hydrated and maintain proper nutrition.</li>
+                    <li class="list-group-item">No skipping days - consistency builds results</li>
+                    <li class="list-group-item">Push through the hard sets</li>
+                    <li class="list-group-item">Track every rep honestly</li>
+                    <li class="list-group-item">Progressive overload is mandatory</li>
+                    <li class="list-group-item">No excuses, only effort</li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <img src="workout-image.jpg" class="img-rounded img-responsive" alt="Workout">
-                <p>Proper form and technique are essential.</p>
+                <p>Discipline beats motivation</p>
             </div>
         </div>
 
