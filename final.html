@@ -13,22 +13,26 @@
             color: #e0e0e0;
         }
         .jumbotron {
-            background: linear-gradient(135deg, #000000, #1a1a1a, #3d3d3d, #ffffff);
+            background: linear-gradient(135deg, 
+                #000000,  /* Black */
+                #3d3d3d,  /* Dark gray */
+                #ffffff,  /* White */
+                #3d3d3d,  /* Dark gray */
+                #000000); /* Black */
             background-size: 300% 300%;
-            animation: gradientShift 12s ease infinite;
-            text-align: center; /* Center text */
-            padding: 80px 0; /* More vertical padding */
+            animation: gradientShift 15s ease infinite;
+            text-align: center;
+            padding: 80px 0;
             margin-top: 20px;
             border: 2px solid #333;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
         .jumbotron h1 {
-            color: #ff0000; /* Red text */
-            font-size: 4em; /* Larger text */
+            color: #ff0000;
+            font-size: 4em;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
         }
@@ -57,14 +61,12 @@
             color: #b0b0b0;
         }
     </style>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-latest.js"></script>
     <!-- Bootstrap 3 JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Jumbotron with centered red "NoSkip" -->
+        <!-- Jumbotron -->
         <div class="jumbotron">
             <h1>NoSkip</h1>
             <p>Your personal fitness commitment tracker</p>
