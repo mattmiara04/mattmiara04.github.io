@@ -4,52 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Workout Pro</title>
-    <!-- Latest compiled and minified Bootstrap CSS -->
+    <!-- Bootstrap 3 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Custom CSS (optional) -->
-    <link rel="stylesheet" href="styles.css">
-    <!-- Custom Styling -->
+    <!-- Custom Styling - DARK THEME COLORS ONLY -->
     <style>
         body{
-            background-color: #8ad4ff;
-            color:white;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
         }
         .jumbotron{
-            background-color: #8ad4ff;
-            color:white;
-            border: 2px solid #08a4ff;
+            background-color: #1e1e1e; /* Dark gray */
+            color: #ffffff;
+            border: 2px solid #333; /* Dark border */
         }
         .navbar{
-            background-color: #08a4ff;
-            border: 3px solid #08a4ff;
+            background-color: #1a1a1a; /* Dark navbar */
+            border: 3px solid #333;
         }
          .navbar-default .navbar-nav>li>a {
-            color: white;
+            color: #b0b0b0; /* Gray links */
         }
         .navbar-default .navbar-nav>li>a:hover {
-            color: #8ad4ff;
+            color: #ffffff; /* White on hover */
         }
         .list-group-item {
-            background-color: #8ad4ff;
-            color: white;
-            border: 1px solid #08a4ff;
+            background-color: #1e1e1e; /* Dark gray */
+            color: #e0e0e0;
+            border: 1px solid #333; /* Dark border */
         }
         .img-rounded {
-            border: 2px solid #08a4ff;
-        } 
+            border: 2px solid #333;
+        }
+        hr {
+            border-color: #333;
+        }
+        /* Footer text color */
+        .container p {
+            color: #b0b0b0;
+        }
     </style>
-    <!-- latest jQuery library -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-latest.js"></script>
-    <!-- Latest compiled Bootstrap JavaScript -->
+    <!-- Bootstrap 3 JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class = "container">
+    <div class="container">
         <!--Jumbotron-->
-        <div class = "jumbotron">
+        <div class="jumbotron">
             <h1>Workout Pro</h1>
-            <p>Your personal fitness guide to building strength and endurance. Discover exercises tailored to your goals.</p>
+            <p>Your personal fitness guide to building strength and endurance.</p>
         </div>
+        
         <!-- Navigation Bar -->
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -68,16 +74,16 @@
                 <h1>Essential Workout Principles</h1>
                 <ul class="list-group">
                     <li class="list-group-item">Consistency is key - aim for at least 3 workouts per week.</li>
-                    <li class="list-group-item">Focus on proper form to prevent injuries and maximize results.</li>
-                    <li class="list-group-item">Combine strength training with cardio for balanced fitness.</li>
-                    <li class="list-group-item">Gradually increase weight or resistance to continue progressing.</li>
-                    <li class="list-group-item">Allow adequate rest between workouts for muscle recovery.</li>
-                    <li class="list-group-item">Stay hydrated and maintain proper nutrition to fuel your workouts.</li>
+                    <li class="list-group-item">Focus on proper form to prevent injuries.</li>
+                    <li class="list-group-item">Combine strength training with cardio.</li>
+                    <li class="list-group-item">Gradually increase weight or resistance.</li>
+                    <li class="list-group-item">Allow adequate rest between workouts.</li>
+                    <li class="list-group-item">Stay hydrated and maintain proper nutrition.</li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <img src="workout-image.jpg" class="img-rounded img-responsive" alt="Workout">
-                <p>Proper form and technique are essential for effective training.</p>
+                <p>Proper form and technique are essential.</p>
             </div>
         </div>
 
