@@ -6,104 +6,51 @@
     <title>NoSkip</title>
     <!-- Bootstrap 3 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Custom Styling -->
     <style>
         body {
             background-color: #121212;
             color: #e0e0e0;
-        }
-        .jumbotron {
-            background: linear-gradient(135deg, 
-                #000000,  /* Black */
-                #3d3d3d,  /* Dark gray */
-                #ffffff,  /* White */
-                #3d3d3d,  /* Dark gray */
-                #000000); /* Black */
-            background-size: 300% 300%;
-            animation: gradientShift 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 80px 0;
-            margin-top: 20px;
-            border: 2px solid #333;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-        .jumbotron h1 {
+        .title {
             color: #ff0000;
-            font-size: 4em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 20px;
         }
-        .navbar {
-            background-color: #1a1a1a;
-            border: 3px solid #333;
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 40px;
         }
-        .navbar-default .navbar-nav>li>a {
-            color: #b0b0b0;
-        }
-        .navbar-default .navbar-nav>li>a:hover {
-            color: #ffffff;
-        }
-        .list-group-item {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-            border: 1px solid #333;
-        }
-        .img-rounded {
-            border: 2px solid #333;
-        }
-        hr {
-            border-color: #333;
-        }
-        .container p {
-            color: #b0b0b0;
+        .btn-endpoint {
+            margin: 15px;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 0;
+            font-weight: bold;
         }
     </style>
-    <!-- Bootstrap 3 JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Jumbotron -->
-        <div class="jumbotron">
-            <h1>NoSkip</h1>
-            <p>Your personal fitness commitment tracker</p>
+        <h1 class="title">NoSkip</h1>
+        <p class="subtitle">Your no-excuses fitness tracker</p>
+        <div>
+            <!-- Button 1: Links to planner page (exercise list endpoint) -->
+            <a href="planner.html" class="btn btn-danger btn-endpoint">
+                Workout Planner
+            </a>
+            
+            <!-- Button 2: Links to instructions page (exercise details endpoint) -->
+            <a href="instructions.html" class="btn btn-danger btn-endpoint">
+                Exercise Instructions
+            </a>
         </div>
-        
-        <!-- Navigation Bar -->
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">NoSkip</a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="exercises.html">Exercises</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="row">
-            <div class="col-md-9">
-                <h1>Workout Principles</h1>
-                <ul class="list-group">
-                    <li class="list-group-item">No skipping days - consistency builds results</li>
-                    <li class="list-group-item">Push through the hard sets</li>
-                    <li class="list-group-item">Track every rep honestly</li>
-                    <li class="list-group-item">Progressive overload is mandatory</li>
-                    <li class="list-group-item">No excuses, only effort</li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <img src="workout-image.jpg" class="img-rounded img-responsive" alt="Workout">
-                <p>Discipline beats motivation</p>
-            </div>
-        </div>
-
-        <hr>
-        <p>Last updated: June 2023 | Created by: Your Name</p>
     </div>
 </body>
 </html>
