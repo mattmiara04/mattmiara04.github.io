@@ -1,398 +1,242 @@
-/// API KEY
+//API KEY
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
-
-// ======================
-// FIXED API FETCH (From Screenshot)
-// ======================
-function fetchExercises(muscle) {
-  // Validate muscle parameter first
-  const validMuscles = {
-    chest: "chest",
-    back: "back",
-    shoulders: "shoulders",
-    biceps: "biceps",
-    triceps: "triceps",
-    legs: "legs",
-    lats: "lats",
-    lower_back: "lower_back",
-    middle_back: "middle_back",
-    traps: "traps",
-    quadriceps: "quadriceps",
-    hamstrings: "hamstrings",
-    calves: "calves",
-    glutes: "glutes"
-  };
-
-  if (!validMuscles[muscle]) {
-    return Promise.resolve([]);
+//Fetch(GET)
+async function fetchExercises(muscle) {
+  try {
+    const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+      headers: { 'X-Api-Key': API_KEY }
+    });
+//Error Handling    
+    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to fetch ${muscle}:`, error);
+    return [];
   }
-
-  const url = 'https://api.api-ninjas.com/v1/exercises?muscle=' + validMuscles[muscle];
+  const url = `https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`;
   const options = {
     method: 'GET',
-    headers: { 
-      'X-Api-Key': API_KEY,
-      'Content-Type': 'application/json'
-    }
+    headers: { 'X-Api-Key': API_KEY }
   };
 
+  // Promise
   let myPromise = new Promise(function(myResolve, myReject) {
     fetch(url, options)
-      .then(function(response) {
-        if (!response.ok) {
-          console.log('API Response:', response);
-          throw new Error('API Error: ' + response.status);
-        }
+      .then(response => {
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
         return response.text();
       })
-      .then(function(text) {
-        try {
-          const myObj = JSON.parse(text);
-          myResolve(myObj);
-        } catch (e) {
-          myReject(new Error('Invalid JSON response'));
-        }
-      })
-      .catch(function(error) {
-        console.error('Fetch error for', muscle, ':', error);
-        myReject(error);
-      });
+      .then(text => myResolve(text))
+      .catch(error => myReject(error));
   });
 
   return myPromise.then(
-    function(result) {
-      return result;
+    function(text) {
+      const myObj = JSON.parse(text); // Manual parse per screenshot
+      return myObj;
     },
     function(error) {
-      console.error('Failed to fetch', muscle, ':', error.message);
+      console.error(`Failed to fetch ${muscle}:`, error);
       return [];
     }
   );
 }
-
-// ======================
-// SAFE DISPLAY FUNCTION
-// ======================
-function displayExercises(exercises) {
-  const resultsDiv = document.getElementById('results');
-  
-  if (!exercises || exercises.length === 0) {
-    resultsDiv.innerHTML = JSON.stringify({ error: "No exercises found" });
-    return;
-  }
-
-  let html = '';
-  for (let i = 0; i < exercises.length; i++) {
-    const ex = exercises[i];
-    if (!ex.name) continue; // Skip invalid entries
-    
-    html += '<button class="exercise-btn" onclick="window.location=\'instructions.html?name=' + 
-            encodeURIComponent(ex.name) + '\'">' +
-            '<h4>' + ex.name + '</h4>' +
-            '<p>Muscle: ' + (ex.muscle ? ex.muscle.replace(/_/g, ' ') : 'N/A') + '</p>' +
-            '<p>Type: ' + (ex.type || 'N/A') + '</p>' +
-            '<p>Equipment: ' + (ex.equipment || 'N/A') + '</p>' +
-            '</button>';
-  }
-  
-  resultsDiv.innerHTML = html || JSON.stringify({ error: "No valid exercises found" });
-}
-
-// ======================
-// SAFE SEARCH FUNCTION
-// ======================
-async function searchExercises() {
-  showError();
-  
-  const muscleKey = document.getElementById('muscle-select').value;
-  if (!muscleKey) {
-    showError('Please select a muscle group');
-    return;
-  }
-
-  try {
-    let exercises = [];
-    
-    if (muscleKey === 'back') {
-      exercises = await fetchBackExercises();
-    } else if (muscleKey === 'legs') {
-      exercises = await fetchLegExercises();
-    } else {
-      exercises = await fetchExercises(muscleKey);
-    }
-    
-    displayExercises(exercises);
-  } catch (error) {
-    showError('Failed to load exercises. Please try a different muscle group.');
-    console.error('Search error:', error);
-  }
-}
-
-// ======================
-// SAFE BACK EXERCISES
-// ======================
+// Fetch Back (Async and Await)
 async function fetchBackExercises() {
-  try {
-    const [lats, lowerBack, middleBack, traps] = await Promise.all([
-      fetchExercises("lats"),
-      fetchExercises("lower_back"),
-      fetchExercises("middle_back"),
-      fetchExercises("traps")
-    ]);
-    return [].concat(
-      lats || [],
-      lowerBack || [],
-      middleBack || [],
-      traps || []
-    ).filter(ex => ex); // Remove any null/undefined
-  } catch (error) {
-    console.error('Error fetching back exercises:', error);
-    return [];
-  }
+  const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
+    fetchExercises("lats"),
+    fetchExercises("lower_back"),
+    fetchExercises("middle_back"),
+    fetchExercises("traps")
+  ]);
+  let latsExercises = await fetchExercises("lats");
+  let lowerBackExercises = await fetchExercises("lower_back");
+  let middleBackExercises = await fetchExercises("middle_back");
+  let trapsExercises = await fetchExercises("traps");
+
+  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
 }
-// API KEY
-const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
-
-// ======================
-// API FETCH FUNCTION (Using Promise pattern from screenshot)
-// ======================
-function fetchExercises(muscle) {
-  // Valid muscle groups accepted by the API
-  const validMuscles = {
-    abdominals: "abdominals",
-    biceps: "biceps",
-    calves: "calves",
-    chest: "chest",
-    forearms: "forearms",
-    glutes: "glutes",
-    hamstrings: "hamstrings",
-    lats: "lats",
-    lower_back: "lower_back",
-    middle_back: "middle_back",
-    neck: "neck",
-    quadriceps: "quadriceps",
-    traps: "traps",
-    triceps: "triceps",
-    shoulders: "shoulders"
-  };
-
-  // Only proceed with valid muscle groups
-  if (!validMuscles[muscle]) {
-    console.error('Invalid muscle group:', muscle);
-    return Promise.resolve([]);
-  }
-
-  const url = 'https://api.api-ninjas.com/v1/exercises?muscle=' + validMuscles[muscle];
-  const options = {
-    method: 'GET',
-    headers: { 
-      'X-Api-Key': API_KEY,
-      'Content-Type': 'application/json'
-    }
-  };
-
-  // Using exact Promise pattern from screenshot
-  let myPromise = new Promise(function(myResolve, myReject) {
-    fetch(url, options)
-      .then(function(response) {
-        if (!response.ok) {
-          throw new Error('API Error: ' + response.status);
-        }
-        return response.text();
-      })
-      .then(function(text) {
-        try {
-          const myObj = JSON.parse(text);
-          myResolve(myObj);
-        } catch (e) {
-          throw new Error('Invalid JSON response');
-        }
-      })
-      .catch(function(error) {
-        console.error('Fetch error for', muscle, ':', error.message);
-        myReject(error);
-      });
-  });
-
-  return myPromise.then(
-    function(result) {
-      return result;
-    },
-    function(error) {
-      return [];
-    }
-  );
-}
-
-// ======================
-// MUSCLE GROUP FUNCTIONS
-// ======================
-async function fetchBackExercises() {
-  try {
-    const [lats, lowerBack, middleBack, traps] = await Promise.all([
-      fetchExercises("lats"),
-      fetchExercises("lower_back"),
-      fetchExercises("middle_back"),
-      fetchExercises("traps")
-    ]);
-    return [].concat(lats || [], lowerBack || [], middleBack || [], traps || []);
-  } catch (error) {
-    console.error('Error fetching back exercises:', error);
-    return [];
-  }
-}
-
+// Fetch Leg
 async function fetchLegExercises() {
-  try {
-    const [quads, hams, calves, glutes] = await Promise.all([
-      fetchExercises("quadriceps"),
-      fetchExercises("hamstrings"),
-      fetchExercises("calves"),
-      fetchExercises("glutes")
-    ]);
-    return [].concat(quads || [], hams || [], calves || [], glutes || []);
-  } catch (error) {
-    console.error('Error fetching leg exercises:', error);
-    return [];
-  }
+  const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
+    fetchExercises("quadriceps"),
+    fetchExercises("hamstrings"),
+    fetchExercises("calves"),
+    fetchExercises("glutes")
+  ]);
+  return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
 }
-
-// ======================
-// DISPLAY FUNCTION (With button implementation)
-// ======================
+//Display
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = exercises.map(ex => `
+    <div class="exercise" style="
+      background: #252525;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+    ">
+      <h4 style="color: #ff0000">${ex.name}</h4>
+      <p>Muscle: ${ex.muscle.replace('_', ' ')}</p>
+      <p>Type: ${ex.type}</p>
+      <p>Equipment: ${ex.equipment}</p>
+    </div>
+  `).join('');
   
-  if (!exercises || exercises.length === 0) {
+  if (exercises.length === 0) {
     resultsDiv.innerHTML = JSON.stringify({ error: "No exercises found" });
     return;
   }
 
-  let html = '';
-  for (let i = 0; i < exercises.length; i++) {
-    const ex = exercises[i];
-    if (!ex || !ex.name) continue;
-    
-    html += '<button class="exercise-btn" onclick="window.location=\'instructions.html?name=' + 
-            encodeURIComponent(ex.name) + '\'">' +
-            '<h4>' + ex.name + '</h4>' +
-            '<p>Muscle: ' + (ex.muscle ? ex.muscle.replace(/_/g, ' ') : 'N/A') + '</p>' +
-            '<p>Type: ' + (ex.type || 'N/A') + '</p>' +
-            '<p>Equipment: ' + (ex.equipment || 'N/A') + '</p>' +
-            '</button>';
+  let text = "";
+  for (const x in exercises) {
+    text += "<div class='exercise' style='background:#252525;padding:15px;margin:10px 0;border-radius:8px;cursor:pointer' onclick='window.location=\"instructions.html?name=" + 
+            exercises[x].name.replace(/\s/g, '+') + "\"'>" +
+            "<h4 style='color:#ff0000'>" + exercises[x].name + "</h4>" +
+            "<p>Muscle: " + exercises[x].muscle.replace('_', ' ') + "</p>" +
+            "<p>Type: " + exercises[x].type + "</p>" +
+            "<p>Equipment: " + exercises[x].equipment + "</p>" +
+            "</div>";
   }
-  
-  resultsDiv.innerHTML = html || JSON.stringify({ error: "No valid exercises found" });
+  resultsDiv.innerHTML = text;
 }
 
+function showError(message = '') {
 // ======================
-// ERROR HANDLING (Using JSON.stringify from screenshot)
+// ERROR HANDLING
 // ======================
 function showError(message) {
   const errorDiv = document.getElementById('error-message');
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.classList.toggle('d-none', !message);
   if (message) {
-    errorDiv.innerHTML = JSON.stringify({ error: message });
-    errorDiv.style.display = 'block';
+    errorDiv.innerHTML = JSON.stringify({ error: message }); // Using stringify
+    errorDiv.classList.remove('d-none');
   } else {
-    errorDiv.innerHTML = '';
-    errorDiv.style.display = 'none';
+    errorDiv.innerHTML = "";
+    errorDiv.classList.add('d-none');
   }
 }
 
+//Search
 // ======================
 // SEARCH FUNCTION
 // ======================
 async function searchExercises() {
   showError();
-  
-  const muscleKey = document.getElementById('muscle-select').value;
-  if (!muscleKey) {
-    showError('Please select a muscle group');
-    return;
-  }
 
-  try {
-    let exercises = [];
-    
-    if (muscleKey === 'back') {
-      exercises = await fetchBackExercises();
-    } else if (muscleKey === 'legs') {
-      exercises = await fetchLegExercises();
-    } else {
+@@ -81,62 +112,23 @@ async function searchExercises() {
       exercises = await fetchExercises(muscleKey);
+    }
+
+    if (!exercises.length) {
+      showError(`No exercises found for ${muscleKey}`);
+      return;
     }
     
     displayExercises(exercises);
   } catch (error) {
-    showError('Failed to load exercises. Please try a different muscle group.');
+    showError('Failed to load exercises. Please try again.');
+    showError('Failed to load exercises');
     console.error('Search error:', error);
   }
 }
 
-// ======================
-// INSTRUCTIONS PAGE (Using property access from screenshot)
-// ======================
+/*******************************/
+/* NEW INSTRUCTIONS PAGE CODE  */
+/*******************************/
+
+// Fetch all exercises for instructions page
 async function fetchAllExercises() {
-  const muscles = ['abdominals', 'biceps', 'calves', 'chest', 'forearms', 
-                  'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back',
-                  'neck', 'quadriceps', 'traps', 'triceps', 'shoulders'];
+  const allMuscles = [
+    'chest', 'lats', 'lower_back', 'middle_back', 'traps',
+    'quadriceps', 'hamstrings', 'calves', 'glutes',
+    'biceps', 'triceps', 'shoulders'
+  ];
   
-  let allExercises = [];
-  for (let i = 0; i < muscles.length; i++) {
-    try {
-      const exercises = await fetchExercises(muscles[i]);
-      allExercises = allExercises.concat(exercises || []);
-    } catch (error) {
-      console.error('Error fetching', muscles[i], ':', error);
-    }
-  }
-  return allExercises;
+  const allPromises = allMuscles.map(muscle => fetchExercises(muscle));
+  const allResults = await Promise.all(allPromises);
+  return allResults.flat();
 }
 
+// Display exercise details on instructions page
+function displayExerciseDetails(exercise) {
+  document.getElementById('ex-name').textContent = exercise.name;
+  document.getElementById('ex-type').textContent = exercise.type || 'N/A';
+  document.getElementById('ex-equipment').textContent = exercise.equipment || 'N/A';
+  document.getElementById('ex-muscle').textContent = exercise.muscle.replace('_', ' ') || 'N/A';
+  
+  const instructionsList = document.getElementById('ex-instructions');
+  if (exercise.instructions) {
+    const steps = exercise.instructions.split('\n').filter(step => step.trim());
+    instructionsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+  } else {
+    instructionsList.innerHTML = '<li>No specific instructions available.</li>';
+  }
+}
+
+// Load exercise when on instructions page
+// ======================
+// INSTRUCTIONS PAGE
+// ======================
 async function loadExerciseDetails() {
   const params = new URLSearchParams(window.location.search);
-  const exerciseName = decodeURIComponent(params.get('name') || '');
+  const exerciseName = params.get('name');
+  
+  const exerciseName = params.get('name')?.replace(/\+/g, ' ');
 
   if (!exerciseName) {
+    document.getElementById('exercise-container').innerHTML = `
+      <div class="alert alert-danger">
+        No exercise selected. Please choose an exercise from the planner.
+      </div>
+    `;
     document.getElementById('exercise-container').innerHTML = 
       JSON.stringify({ error: "No exercise selected" });
     return;
   }
 
-  try {
-    const allExercises = await fetchAllExercises();
-    const exercise = allExercises.find(function(ex) { 
-      return ex && ex["name"] === exerciseName; 
-    });
-    
+@@ -145,25 +137,25 @@ async function loadExerciseDetails() {
+    const exercise = allExercises.find(ex => ex.name === exerciseName);
+
     if (exercise) {
+      displayExerciseDetails(exercise);
+      // Using manual property access per screenshot
       document.getElementById('ex-name').textContent = exercise["name"];
       document.getElementById('ex-type').textContent = exercise["type"] || 'N/A';
       document.getElementById('ex-equipment').textContent = exercise["equipment"] || 'N/A';
-      document.getElementById('ex-muscle').textContent = exercise["muscle"] ? exercise["muscle"].replace(/_/g, ' ') : 'N/A';
+      document.getElementById('ex-muscle').textContent = exercise["muscle"].replace('_', ' ') || 'N/A';
       
       const instructionsList = document.getElementById('ex-instructions');
       if (exercise["instructions"]) {
         instructionsList.innerHTML = exercise["instructions"]
           .split('\n')
-          .filter(step => step.trim())
-          .map(function(step) { return '<li>' + step + '</li>'; })
+          .map(step => `<li>${step}</li>`)
           .join('');
-      } else {
-        instructionsList.innerHTML = '<li>No instructions available</li>';
       }
     } else {
+      document.getElementById('exercise-container').innerHTML = `
+        <div class="alert alert-danger">
+          Exercise not found. It may have been removed.
+        </div>
+      `;
       document.getElementById('exercise-container').innerHTML = 
         JSON.stringify({ error: "Exercise not found" });
     }
   } catch (error) {
+    document.getElementById('exercise-container').innerHTML = `
+      <div class="alert alert-danger">
+        Failed to load exercise details. Please try again later.
+      </div>
+    `;
+    console.error('Error loading exercise:', error);
     document.getElementById('exercise-container').innerHTML = 
       JSON.stringify({ error: "Failed to load details" });
-    console.error('Error loading exercise:', error);
   }
 }
 
-// Initialize instructions page
+// Initialize instructions page if needed
 if (window.location.pathname.includes('instructions.html')) {
   loadExerciseDetails();
 }
