@@ -45,6 +45,12 @@
             margin: 20px 0;
             font-weight: bold;
         }
+        #error-message {
+            background: #330000;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +73,7 @@
                     <button class="btn btn-block" onclick="searchExercises()">SEARCH</button>
                 </div>
             </div>
+            <div id="error-message" class="d-none mt-3"></div>
             <div id="results" class="mt-4"></div>
         </div>
     </div>
