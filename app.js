@@ -17,7 +17,18 @@ async function getBackExercises() {
   return lats.concat(lower, middle, traps);
 }
 
-// 3. Displays exercises (unchanged)
+// 3. NEW: Combines all leg muscle exercises
+async function getLegExercises() {
+  const abductors = await fetchExercises("abductors");
+  const adductors = await fetchExercises("adductors");
+  const calves = await fetchExercises("calves");
+  const glutes = await fetchExercises("glutes");
+  const hamstrings = await fetchExercises("hamstrings");
+  const quads = await fetchExercises("quadriceps");
+  return abductors.concat(adductors, calves, glutes, hamstrings, quads);
+}
+
+// 4. Displays exercises
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = exercises.map(ex => `
@@ -30,11 +41,12 @@ function displayExercises(exercises) {
       <h4 style="color: #ff0000">${ex.name}</h4>
       <p>Type: ${ex.type}</p>
       <p>Equipment: ${ex.equipment}</p>
+      <p>Muscle: ${ex.muscle.replace('_', ' ')}</p>
     </div>
   `).join('');
 }
 
-// 4. Main search function called via onclick
+// 5. Main search function
 async function searchExercises() {
   const muscle = document.getElementById('muscle-select').value;
   if (!muscle) {
@@ -45,6 +57,8 @@ async function searchExercises() {
   try {
     const exercises = muscle === "back" 
       ? await getBackExercises() 
+      : muscle === "legs"
+      ? await getLegExercises()
       : await fetchExercises(muscle);
     displayExercises(exercises);
   } catch (error) {
