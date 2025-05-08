@@ -1,24 +1,40 @@
 /* ========== API CONFIGURATION ========== */
-const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
+const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m"; // Double-check this key
 
 /* ========== CORE FUNCTIONS ========== */
 async function fetchExercises(muscle) {
     try {
         const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
-            headers: { 'X-Api-Key': API_KEY }
+            method: 'GET',
+            headers: { 
+                'X-Api-Key': API_KEY,
+                'Content-Type': 'application/json'
+            }
         });
         
         if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.message || `API Error: ${response.status}`);
         }
         
         return await response.json();
     } catch (error) {
         console.error(`Error fetching ${muscle} exercises:`, error);
-        throw error;
+        throw new Error(`Failed to fetch exercises: ${error.message}`);
     }
 }
 
+/* ========== VALID MUSCLE GROUPS ========== */
+const VALID_MUSCLES = {
+    'chest': 'chest',
+    'back': 'lats', // API uses 'lats' for back
+    'shoulders': 'delts', // API may use 'delts' or 'shoulders'
+    'biceps': 'biceps',
+    'triceps': 'triceps',
+    'legs': 'quadriceps' // Using quads as primary leg muscle
+};
+
+/* ========== UI FUNCTIONS ========== */
 function displayExercises(exercises) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = exercises.map(ex => `
@@ -29,13 +45,13 @@ function displayExercises(exercises) {
             border-radius: 8px;
         ">
             <h4 style="color: #ff0000">${ex.name}</h4>
+            <p>Muscle: ${ex.muscle}</p>
             <p>Type: ${ex.type}</p>
             <p>Equipment: ${ex.equipment}</p>
         </div>
     `).join('');
 }
 
-/* ========== ERROR HANDLING ========== */
 function showError(message) {
     const errorDiv = document.getElementById('error-message');
     if (errorDiv) {
@@ -46,30 +62,30 @@ function showError(message) {
 
 /* ========== MAIN FUNCTION ========== */
 async function searchExercises() {
-    // Reset UI
     showError('');
     
-    // Get user input
-    const muscle = document.getElementById('muscle-select').value;
+    const muscleSelect = document.getElementById('muscle-select');
+    const muscleKey = muscleSelect.value;
     
-    // Validate input
-    if (!muscle) {
+    if (!muscleKey) {
         showError('Please select a muscle group');
         return;
     }
 
+    // Map UI selection to API parameter
+    const apiMuscleParam = VALID_MUSCLES[muscleKey] || muscleKey;
+    
     try {
-        // Fetch and display exercises
-        const exercises = await fetchExercises(muscle);
+        const exercises = await fetchExercises(apiMuscleParam);
         
-        if (!exercises || exercises.length === 0) {
-            showError(`No exercises found for ${muscle}`);
+        if (!exercises?.length) {
+            showError(`No exercises found for ${muscleKey}`);
             return;
         }
         
         displayExercises(exercises);
     } catch (error) {
-        showError('Failed to load exercises. Please try again later.');
+        showError('Exercise data unavailable. Please try again later.');
         console.error('Search failed:', error);
     }
 }
