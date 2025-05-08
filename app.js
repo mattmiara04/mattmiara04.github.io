@@ -1,20 +1,18 @@
-// API Configuration
+// API Key
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 const API_URL = "https://api.api-ninjas.com/v1/exercises";
 
-// DOM Elements
+// DOM
 const resultsDiv = document.getElementById('results');
 const errorDiv = document.getElementById('error-message');
 const exerciseContainer = document.getElementById('exercise-container');
 
-// 1. JSON PARSE METHOD FROM YOUR SCREENSHOT
 function parseJSON(response) {
     return response.text().then(function(text) {
         return text ? JSON.parse(text) : {}
     });
 }
-
-// 2. ASYNC/AWAIT METHOD FROM YOUR SCREENSHOT
+//Fetch Muscle
 async function fetchExercises(muscle) {
     try {
         const url = `${API_URL}?muscle=${muscle}`;
@@ -23,9 +21,8 @@ async function fetchExercises(muscle) {
             headers: { 'X-Api-Key': API_KEY }
         };
 
-        // 3. REST API CONSUMPTION FROM YOUR SCREENSHOT
         const response = await fetch(url, options);
-        const result = await parseJSON(response); // Using your JSON parse method
+        const result = await parseJSON(response); 
         return result;
     } catch (error) {
         console.error(`Failed to fetch ${muscle}:`, error);
@@ -33,8 +30,7 @@ async function fetchExercises(muscle) {
         return [];
     }
 }
-
-// Using Promise pattern from your screenshot
+//Fetch All Exercises
 function fetchAllExercises() {
     const muscles = [
         'chest', 'lats', 'lower_back', 'middle_back', 'traps',
@@ -106,7 +102,7 @@ function displayExerciseDetails(exercise) {
     `;
 }
 
-// Search function to be called from HTML onclick
+// Search
 function searchExercises() {
     showError();
     const muscleSelect = document.getElementById('muscle-select');
@@ -135,7 +131,7 @@ function searchExercises() {
         });
 }
 
-// Load exercise details for instructions page
+// Load  instructins
 function loadExerciseDetails() {
     const params = new URLSearchParams(window.location.search);
     const exerciseName = params.get('name');
@@ -160,11 +156,11 @@ function loadExerciseDetails() {
         });
 }
 
-// Initialize
+// Initialization
 if (window.location.pathname.includes('instructions.html')) {
     loadExerciseDetails();
 }
 
-// Expose functions to global scope
+// Global function
 window.searchExercises = searchExercises;
 window.loadExerciseDetails = loadExerciseDetails;
