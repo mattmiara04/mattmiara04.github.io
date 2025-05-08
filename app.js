@@ -126,10 +126,6 @@ function showError(message) {
 async function searchExercises() {
   showError();
 
-@@ -81,62 +112,23 @@ async function searchExercises() {
-      exercises = await fetchExercises(muscleKey);
-    }
-
     if (!exercises.length) {
       showError(`No exercises found for ${muscleKey}`);
       return;
@@ -177,9 +173,6 @@ function displayExerciseDetails(exercise) {
 }
 
 // Load exercise when on instructions page
-// ======================
-// INSTRUCTIONS PAGE
-// ======================
 async function loadExerciseDetails() {
   const params = new URLSearchParams(window.location.search);
   const exerciseName = params.get('name');
@@ -197,12 +190,8 @@ async function loadExerciseDetails() {
     return;
   }
 
-@@ -145,25 +137,25 @@ async function loadExerciseDetails() {
-    const exercise = allExercises.find(ex => ex.name === exerciseName);
-
     if (exercise) {
       displayExerciseDetails(exercise);
-      // Using manual property access per screenshot
       document.getElementById('ex-name').textContent = exercise["name"];
       document.getElementById('ex-type').textContent = exercise["type"] || 'N/A';
       document.getElementById('ex-equipment').textContent = exercise["equipment"] || 'N/A';
