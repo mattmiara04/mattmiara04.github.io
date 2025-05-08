@@ -18,10 +18,23 @@ async function fetchExercises(muscle) {
 
 // Fetch Back
 async function fetchBackExercises() {
-  const muscles = ["lats", "lower_back", "middle_back", "traps"];
-  const all = await Promise.all(muscles.map(m => fetchExercises(m)));
-  return all.flat(); // Flatten array of arrays
+  try {
+    // Define all back-related muscles
+    const backMuscles = ["lats", "lower_back", "middle_back", "traps"];
+    
+    // Fetch all in parallel
+    const allExercises = await Promise.all(
+      backMuscles.map(muscle => fetchExercises(muscle))
+    );
+    
+    // Flatten and filter out empty arrays
+    return allExercises.flat().filter(ex => ex);
+  } catch (error) {
+    console.error("Error fetching back exercises:", error);
+    return [];
+  }
 }
+
 
 
 // Fetch Leg
