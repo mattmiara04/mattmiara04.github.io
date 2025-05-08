@@ -1,14 +1,27 @@
-// API KEY
+//API KEY
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 
-// Fetch (GET)
+//Fetch
 async function fetchExercises(muscle) {
   try {
     const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
-      headers: { 'X-Api-Key': API_KEY }
+      headers: { 
+        'X-Api-Key': API_KEY,
+        'Content-Type': 'application/json' // Added required header
+      }
     });
     
-    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+    //Error Handling    
+    if (!response.ok) {
+      // More detailed error logging
+      const errorData = await response.json().catch(() => ({}));
+      console.error('API Error Details:', {
+        status: response.status,
+        message: errorData.message || 'No error details'
+      });
+      throw new Error(`API Error: ${response.status}`);
+    }
+    
     return await response.json();
   } catch (error) {
     console.error(`Failed to fetch ${muscle}:`, error);
@@ -16,40 +29,55 @@ async function fetchExercises(muscle) {
   }
 }
 
-// Fetch Back
+// Fetch Back (Async and Await)
 async function fetchBackExercises() {
-  const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
-    fetchExercises("lats"),
-    fetchExercises("lower_back"),
-    fetchExercises("middle_back"),
-    fetchExercises("traps")
-  ]);
-  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
+  try {
+    const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
+      fetchExercises("lats"),
+      fetchExercises("lower_back"),
+      fetchExercises("middle_back"),
+      fetchExercises("traps")
+    ]);
+    return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
+  } catch (error) {
+    console.error('Error fetching back exercises:', error);
+    return [];
+  }
 }
 
 // Fetch Leg
 async function fetchLegExercises() {
-  const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
-    fetchExercises("quadriceps"),
-    fetchExercises("hamstrings"),
-    fetchExercises("calves"),
-    fetchExercises("glutes")
-  ]);
-  return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
+  try {
+    const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
+      fetchExercises("quadriceps"),
+      fetchExercises("hamstrings"),
+      fetchExercises("calves"),
+      fetchExercises("glutes")
+    ]);
+    return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
+  } catch (error) {
+    console.error('Error fetching leg exercises:', error);
+    return [];
+  }
 }
 
-// Display
+//Display
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
   
   if (!exercises || exercises.length === 0) {
-    resultsDiv.innerHTML = '<div class="alert alert-warning">No exercises found</div>';
+    resultsDiv.innerHTML = '<div class="alert alert-warning">No exercises found for selected muscle group</div>';
     return;
   }
 
   resultsDiv.innerHTML = exercises.map(ex => `
-    <div class="exercise" onclick="window.location='instructions.html?name=${encodeURIComponent(ex.name)}'"
-      style="background: #252525; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer;">
+    <div class="exercise" style="
+      background: #252525;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      cursor: pointer;
+    " onclick="window.location='instructions.html?name=${encodeURIComponent(ex.name)}'">
       <h4 style="color: #ff0000">${ex.name}</h4>
       <p>Muscle: ${ex.muscle.replace('_', ' ')}</p>
       <p>Type: ${ex.type}</p>
@@ -58,7 +86,9 @@ function displayExercises(exercises) {
   `).join('');
 }
 
-// Error Handling
+// ======================
+// ERROR HANDLING
+// ======================
 function showError(message = '') {
   const errorDiv = document.getElementById('error-message');
   if (errorDiv) {
@@ -67,9 +97,9 @@ function showError(message = '') {
   }
 }
 
-// Search
+//Search
 async function searchExercises() {
-  showError();
+  showError('');
   
   const muscleKey = document.getElementById('muscle-select').value;
   if (!muscleKey) {
@@ -90,10 +120,14 @@ async function searchExercises() {
     
     displayExercises(exercises);
   } catch (error) {
-    showError('Failed to load exercises. Please try again.');
+    showError('Failed to load exercises. Please try again later.');
     console.error('Search error:', error);
   }
 }
+
+/*******************************/
+/* NEW INSTRUCTIONS PAGE CODE  */
+/*******************************/
 
 // Fetch all exercises for instructions page
 async function fetchAllExercises() {
@@ -103,12 +137,17 @@ async function fetchAllExercises() {
     'biceps', 'triceps', 'shoulders'
   ];
   
-  const allPromises = allMuscles.map(muscle => fetchExercises(muscle));
-  const allResults = await Promise.all(allPromises);
-  return allResults.flat();
+  try {
+    const allPromises = allMuscles.map(muscle => fetchExercises(muscle));
+    const allResults = await Promise.all(allPromises);
+    return allResults.flat();
+  } catch (error) {
+    console.error('Error fetching all exercises:', error);
+    return [];
+  }
 }
 
-// Display exercise details
+// Display exercise details on instructions page
 function displayExerciseDetails(exercise) {
   document.getElementById('ex-name').textContent = exercise.name;
   document.getElementById('ex-type').textContent = exercise.type || 'N/A';
@@ -116,19 +155,25 @@ function displayExerciseDetails(exercise) {
   document.getElementById('ex-muscle').textContent = exercise.muscle.replace('_', ' ') || 'N/A';
   
   const instructionsList = document.getElementById('ex-instructions');
-  instructionsList.innerHTML = exercise.instructions 
-    ? exercise.instructions.split('\n').map(step => `<li>${step}</li>`).join('')
-    : '<li>No instructions available</li>';
+  if (exercise.instructions) {
+    const steps = exercise.instructions.split('\n').filter(step => step.trim());
+    instructionsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+  } else {
+    instructionsList.innerHTML = '<li>No specific instructions available.</li>';
+  }
 }
 
-// Load exercise details
+// Load exercise when on instructions page
 async function loadExerciseDetails() {
   const params = new URLSearchParams(window.location.search);
   const exerciseName = params.get('name');
 
   if (!exerciseName) {
-    document.getElementById('exercise-container').innerHTML = 
-      '<div class="alert alert-danger">No exercise selected</div>';
+    document.getElementById('exercise-container').innerHTML = `
+      <div class="alert alert-danger">
+        No exercise selected. Please choose an exercise from the planner.
+      </div>
+    `;
     return;
   }
 
@@ -139,17 +184,23 @@ async function loadExerciseDetails() {
     if (exercise) {
       displayExerciseDetails(exercise);
     } else {
-      document.getElementById('exercise-container').innerHTML = 
-        '<div class="alert alert-danger">Exercise not found</div>';
+      document.getElementById('exercise-container').innerHTML = `
+        <div class="alert alert-danger">
+          Exercise not found. It may have been removed.
+        </div>
+      `;
     }
   } catch (error) {
-    document.getElementById('exercise-container').innerHTML = 
-      '<div class="alert alert-danger">Failed to load details</div>';
-    console.error('Error:', error);
+    document.getElementById('exercise-container').innerHTML = `
+      <div class="alert alert-danger">
+        Failed to load exercise details. Please try again later.
+      </div>
+    `;
+    console.error('Error loading exercise:', error);
   }
 }
 
-// Initialize
+// Initialize instructions page if needed
 if (window.location.pathname.includes('instructions.html')) {
   loadExerciseDetails();
 }
