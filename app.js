@@ -18,14 +18,11 @@ async function fetchExercises(muscle) {
 
 // Fetch Back
 async function fetchBackExercises() {
-  const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
-    fetchExercises("lats"),
-    fetchExercises("lower_back"),
-    fetchExercises("middle_back"),
-    fetchExercises("traps")
-  ]);
-  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
+  const muscles = ["lats", "lower_back", "middle_back", "traps"];
+  const all = await Promise.all(muscles.map(m => fetchExercises(m)));
+  return all.flat(); // Flatten array of arrays
 }
+
 
 // Fetch Leg
 async function fetchLegExercises() {
