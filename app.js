@@ -1,6 +1,5 @@
 //API KEY
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
-
 //Fetch
 async function fetchExercises(muscle) {
   try {
@@ -15,28 +14,16 @@ async function fetchExercises(muscle) {
     return [];
   }
 }
-
 // Fetch Back
 async function fetchBackExercises() {
-  try {
-    // Define all back-related muscles
-    const backMuscles = ["lats", "lower_back", "middle_back", "traps"];
-    
-    // Fetch all in parallel
-    const allExercises = await Promise.all(
-      backMuscles.map(muscle => fetchExercises(muscle))
-    );
-    
-    // Flatten and filter out empty arrays
-    return allExercises.flat().filter(ex => ex);
-  } catch (error) {
-    console.error("Error fetching back exercises:", error);
-    return [];
-  }
+  const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
+    fetchExercises("lats"),
+    fetchExercises("lower_back"),
+    fetchExercises("middle_back"),
+    fetchExercises("traps")
+  ]);
+  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
 }
-
-
-
 // Fetch Leg
 async function fetchLegExercises() {
   const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
@@ -47,7 +34,6 @@ async function fetchLegExercises() {
   ]);
   return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
 }
-
 //Display
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
