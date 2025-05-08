@@ -31,7 +31,7 @@ async function fetchExercises(muscle) {
   }
 }
 
-// Version 1: Using array destructuring
+// Fixed version for back exercises
 async function fetchBackExercises() {
   const [lats, lower, middle, traps] = await Promise.all([
     fetchExercises("lats"),
@@ -39,11 +39,10 @@ async function fetchBackExercises() {
     fetchExercises("middle_back"),
     fetchExercises("traps")
   ]);
-  // Using concat method for combination
   return [].concat(lats, lower, middle, traps);
 }
 
-// Version 2: Using array destructuring with spread operator
+// Fixed version for leg exercises
 async function fetchLegExercises() {
   const [quads, hams, calves, glutes] = await Promise.all([
     fetchExercises("quadriceps"),
@@ -51,8 +50,7 @@ async function fetchLegExercises() {
     fetchExercises("calves"),
     fetchExercises("glutes")
   ]);
-  // Using spread operator for combination
-  return [].concat(lats, lower, middle, traps);
+  return [...quads, ...hams, ...calves, ...glutes];
 }
 
 /* ========== UI FUNCTIONS ========== */
@@ -75,8 +73,10 @@ function displayExercises(exercises) {
 
 function showError(message = '') {
   const errorDiv = document.getElementById('error-message');
-  errorDiv.textContent = message;
-  errorDiv.classList.toggle('d-none', !message);
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.classList.toggle('d-none', !message);
+  }
 }
 
 /* ========== MAIN FUNCTION ========== */
@@ -93,11 +93,11 @@ async function searchExercises() {
     let exercises = [];
     
     if (muscleKey === 'back') {
-      exercises = await fetchBackExercises(); // Using destructuring+concat
+      exercises = await fetchBackExercises();
     } else if (muscleKey === 'legs') {
-      exercises = await fetchLegExercises(); // Using destructuring+spread
+      exercises = await fetchLegExercises();
     } else {
-      exercises = await fetchExercises(muscleKey); // Single muscle
+      exercises = await fetchExercises(muscleKey);
     }
     
     if (!exercises.length) {
