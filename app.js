@@ -1,23 +1,24 @@
+/* ========== CONSTANTS AND DOM ELEMENTS ========== */
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
+const errorMsg = document.getElementById('error-message');
 
-// 1. Fetches exercises for a single muscle
+/* ========== API FUNCTIONS ========== */
 async function fetchExercises(muscle) {
-  const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
-    headers: { 'X-Api-Key': API_KEY }
-  });
-  return await response.json();
+  try {
+    const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+      headers: { 'X-Api-Key': API_KEY }
+    });
+    
+    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+    return await response.json();
+    
+  } catch (error) {
+    console.error(`Failed to fetch ${muscle}:`, error);
+    throw error;
+  }
 }
 
-// 2. Combines all back muscle exercises
-async function getBackExercises() {
-  const lats = await fetchExercises("lats");
-  const lower = await fetchExercises("lower_back");
-  const middle = await fetchExercises("middle_back");
-  const traps = await fetchExercises("traps");
-  return lats.concat(lower, middle, traps);
-}
-
-// 3. Displays exercises (unchanged)
+/* ========== UI FUNCTIONS ========== */
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = exercises.map(ex => `
@@ -34,21 +35,38 @@ function displayExercises(exercises) {
   `).join('');
 }
 
-// 4. Main search function called via onclick
+function showError(message = '') {
+  const errorMsg = document.getElementById('error-message');
+  errorMsg.textContent = message;
+  message ? errorMsg.classList.remove('d-none') 
+          : errorMsg.classList.add('d-none');
+}
+
+/* ========== MAIN FUNCTION ========== */
 async function searchExercises() {
+  showError(); // Clear previous errors
+  
   const muscle = document.getElementById('muscle-select').value;
+  
+  // Input validation
   if (!muscle) {
-    alert("Please select a muscle group!");
+    showError('Please select a muscle group');
     return;
   }
 
   try {
-    const exercises = muscle === "back" 
-      ? await getBackExercises() 
-      : await fetchExercises(muscle);
+    const exercises = await fetchExercises(muscle);
+    
+    // Results validation
+    if (!exercises?.length) {
+      showError(`No exercises found for ${muscle}`);
+      return;
+    }
+    
     displayExercises(exercises);
+    
   } catch (error) {
-    console.error("Error:", error);
-    alert("Failed to fetch exercises. Check console.");
+    showError('Failed to fetch exercises. Please try again.');
+    console.error('Search error:', error);
   }
 }
