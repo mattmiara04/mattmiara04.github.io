@@ -97,75 +97,77 @@ async function searchExercises() {
   }
 }
 
-/* ========== INSTRUCTIONS PAGE FUNCTIONALITY ========== */
-async function loadExerciseDetail() {
-    const params = new URLSearchParams(window.location.search);
-    const exerciseName = params.get('name');
-    
-    if (!exerciseName) {
-        document.getElementById('exercise-container').innerHTML = `
-            <div class="alert alert-danger">
-                No exercise selected. Please choose an exercise from the planner.
-            </div>
-        `;
-        return;
-    }
+/*******************************/
+/* NEW INSTRUCTIONS PAGE CODE  */
+/*******************************/
 
-    try {
-        // Search all exercises to find the matching one
-        const allExercises = await fetchAllExercises();
-        const exercise = allExercises.find(ex => ex.name === exerciseName);
-        
-        if (exercise) {
-            displayExerciseDetail(exercise);
-        } else {
-            showErrorOnInstructionsPage('Exercise not found');
-        }
-    } catch (error) {
-        showErrorOnInstructionsPage('Failed to load exercise details');
-        console.error('Error loading exercise:', error);
-    }
-}
-
+// Fetch all exercises for instructions page
 async function fetchAllExercises() {
-    // Fetch all possible muscle groups
-    const muscleGroups = [
-        'chest', 'lats', 'lower_back', 'middle_back', 'traps',
-        'quadriceps', 'hamstrings', 'calves', 'glutes',
-        'biceps', 'triceps', 'delts'
-    ];
-    
-    const allPromises = muscleGroups.map(muscle => fetchExercises(muscle));
-    const allResults = await Promise.all(allPromises);
-    return allResults.flat();
+  const allMuscles = [
+    'chest', 'lats', 'lower_back', 'middle_back', 'traps',
+    'quadriceps', 'hamstrings', 'calves', 'glutes',
+    'biceps', 'triceps', 'shoulders'
+  ];
+  
+  const allPromises = allMuscles.map(muscle => fetchExercises(muscle));
+  const allResults = await Promise.all(allPromises);
+  return allResults.flat();
 }
 
-function displayExerciseDetail(exercise) {
-    document.getElementById('ex-name').textContent = exercise.name;
-    document.getElementById('ex-type').textContent = exercise.type || 'N/A';
-    document.getElementById('ex-equipment').textContent = exercise.equipment || 'N/A';
-    document.getElementById('ex-difficulty').textContent = exercise.difficulty || 'N/A';
-    document.getElementById('ex-muscle').textContent = exercise.muscle.replace('_', ' ') || 'N/A';
-    
-    // Format instructions as ordered list
-    const instructionsList = document.getElementById('ex-instructions');
-    if (exercise.instructions) {
-        const steps = exercise.instructions.split('\n').filter(step => step.trim());
-        instructionsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
-    } else {
-        instructionsList.innerHTML = '<li>No specific instructions available for this exercise.</li>';
-    }
+// Display exercise details on instructions page
+function displayExerciseDetails(exercise) {
+  document.getElementById('ex-name').textContent = exercise.name;
+  document.getElementById('ex-type').textContent = exercise.type || 'N/A';
+  document.getElementById('ex-equipment').textContent = exercise.equipment || 'N/A';
+  document.getElementById('ex-muscle').textContent = exercise.muscle.replace('_', ' ') || 'N/A';
+  
+  const instructionsList = document.getElementById('ex-instructions');
+  if (exercise.instructions) {
+    const steps = exercise.instructions.split('\n').filter(step => step.trim());
+    instructionsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+  } else {
+    instructionsList.innerHTML = '<li>No specific instructions available.</li>';
+  }
 }
 
-function showErrorOnInstructionsPage(message) {
+// Load exercise when on instructions page
+async function loadExerciseDetails() {
+  const params = new URLSearchParams(window.location.search);
+  const exerciseName = params.get('name');
+  
+  if (!exerciseName) {
     document.getElementById('exercise-container').innerHTML = `
-        <div class="alert alert-danger">
-            ${message}
-        </div>
+      <div class="alert alert-danger">
+        No exercise selected. Please choose an exercise from the planner.
+      </div>
     `;
+    return;
+  }
+
+  try {
+    const allExercises = await fetchAllExercises();
+    const exercise = allExercises.find(ex => ex.name === exerciseName);
+    
+    if (exercise) {
+      displayExerciseDetails(exercise);
+    } else {
+      document.getElementById('exercise-container').innerHTML = `
+        <div class="alert alert-danger">
+          Exercise not found. It may have been removed.
+        </div>
+      `;
+    }
+  } catch (error) {
+    document.getElementById('exercise-container').innerHTML = `
+      <div class="alert alert-danger">
+        Failed to load exercise details. Please try again later.
+      </div>
+    `;
+    console.error('Error loading exercise:', error);
+  }
 }
 
-// Check if we're on the instructions page
+// Initialize instructions page if needed
 if (window.location.pathname.includes('instructions.html')) {
-    loadExerciseDetail();
+  loadExerciseDetails();
 }
