@@ -42,10 +42,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        #muscle-select:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
-        }
         .search-btn {
             margin: 0;
             padding: 10px;
@@ -59,7 +55,6 @@
         }
         .search-btn:hover {
             background: #ff0000;
-            transform: scale(1.02);
         }
         #error-message {
             background: #330000;
@@ -67,6 +62,7 @@
             padding: 10px;
             border-radius: 5px;
             margin-top: 15px;
+            display: none;
         }
         .exercise {
             background: #252525;
@@ -83,6 +79,17 @@
         }
         .exercise h4 {
             color: #ff0000;
+        }
+        .instructions-box {
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .instructions-box p {
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -106,8 +113,14 @@
                     <button class="search-btn" onclick="searchExercises()">SEARCH</button>
                 </div>
             </div>
-            <div id="error-message" style="display: none;"></div>
-            <div id="results" class="mt-4"></div>
+            <div id="error-message"></div>
+            <div id="results">
+                <div class="instructions-box">
+                    <p>1. Please select a muscle group</p>
+                    <p>2. Click SEARCH to view exercises</p>
+                    <p>3. Click on any workout to view instructions</p>
+                </div>
+            </div>
         </div>
     </div>
 
