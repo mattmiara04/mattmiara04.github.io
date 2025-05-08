@@ -1,21 +1,6 @@
 /* ========== API CONFIGURATION ========== */
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 
-/* ========== MUSCLE GROUP MAPPING ========== */
-const MUSCLE_GROUPS = {
-  // Single muscle groups
-  chest: ['chest'],
-  biceps: ['biceps'],
-  triceps: ['triceps'],
-  shoulders: ['delts'],
-  
-  // Combined back muscles
-  back: ['lats', 'lower_back', 'middle_back', 'traps'],
-  
-  // Combined leg muscles
-  legs: ['quadriceps', 'hamstrings', 'calves', 'glutes']
-};
-
 /* ========== CORE FUNCTIONS ========== */
 async function fetchExercises(muscle) {
   try {
@@ -31,26 +16,26 @@ async function fetchExercises(muscle) {
   }
 }
 
-// Fixed version for back exercises
+// Fetch all back exercises (lats, lower_back, middle_back, traps)
 async function fetchBackExercises() {
-  const [lats, lower, middle, traps] = await Promise.all([
+  const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
     fetchExercises("lats"),
     fetchExercises("lower_back"),
     fetchExercises("middle_back"),
     fetchExercises("traps")
   ]);
-  return [].concat(lats, lower, middle, traps);
+  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
 }
 
-// Fixed version for leg exercises
+// Fetch all leg exercises (quadriceps, hamstrings, calves, glutes)
 async function fetchLegExercises() {
-  const [quads, hams, calves, glutes] = await Promise.all([
+  const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
     fetchExercises("quadriceps"),
     fetchExercises("hamstrings"),
     fetchExercises("calves"),
     fetchExercises("glutes")
   ]);
-  return [...quads, ...hams, ...calves, ...glutes];
+  return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
 }
 
 /* ========== UI FUNCTIONS ========== */
