@@ -13,19 +13,13 @@
             padding: 20px;
         }
         .jumbotron {
-            background: linear-gradient(135deg, #000000, #252525, #3d3d3d, #252525, #000000);
-            background-size: 300% 300%;
-            animation: gradientShift 15s ease infinite;
+            background: #252525;
             border: 2px solid #333333;
             border-radius: 15px;
             padding: 40px;
             width: 90%;
             max-width: 800px;
             margin: 0 auto;
-        }
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0 50% }
-            50% { background-position: 100% 50% }
         }
         .planner-title {
             color: #ff0000;
@@ -40,21 +34,16 @@
             border: 1px solid #ff0000;
             padding: 10px;
             border-radius: 5px;
-            cursor: pointer;
+            width: 100%;
         }
         .search-btn {
-            margin: 0;
             padding: 10px;
             background: #cc0000;
             color: #ffffff;
             border: none;
             font-weight: bold;
             width: 100%;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .search-btn:hover {
-            background: #ff0000;
+            border-radius: 5px;
         }
         #error-message {
             background: #330000;
@@ -69,13 +58,7 @@
             padding: 15px;
             margin: 10px 0;
             border-radius: 8px;
-            cursor: pointer;
             border: 1px solid #333;
-            transition: all 0.2s;
-        }
-        .exercise:hover {
-            border-color: #ff0000;
-            transform: translateY(-2px);
         }
         .exercise h4 {
             color: #ff0000;
