@@ -1,91 +1,113 @@
 /* ========== API CONFIGURATION ========== */
-const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m"; // Double-check this key
+const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
+
+/* ========== MUSCLE GROUP MAPPING ========== */
+const MUSCLE_GROUPS = {
+  // Single muscle groups
+  chest: ['chest'],
+  biceps: ['biceps'],
+  triceps: ['triceps'],
+  shoulders: ['delts'],
+  
+  // Combined back muscles
+  back: ['lats', 'lower_back', 'middle_back', 'traps'],
+  
+  // Combined leg muscles
+  legs: ['quadriceps', 'hamstrings', 'calves', 'glutes']
+};
 
 /* ========== CORE FUNCTIONS ========== */
 async function fetchExercises(muscle) {
-    try {
-        const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
-            method: 'GET',
-            headers: { 
-                'X-Api-Key': API_KEY,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `API Error: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error(`Error fetching ${muscle} exercises:`, error);
-        throw new Error(`Failed to fetch exercises: ${error.message}`);
-    }
+  try {
+    const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+      headers: { 'X-Api-Key': API_KEY }
+    });
+    
+    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to fetch ${muscle}:`, error);
+    return [];
+  }
 }
 
-/* ========== VALID MUSCLE GROUPS ========== */
-const VALID_MUSCLES = {
-    'chest': 'chest',
-    'back': 'lats', // API uses 'lats' for back
-    'shoulders': 'delts', // API may use 'delts' or 'shoulders'
-    'biceps': 'biceps',
-    'triceps': 'triceps',
-    'legs': 'quadriceps' // Using quads as primary leg muscle
-};
+// Version 1: Using array destructuring
+async function fetchBackExercises() {
+  const [lats, lower, middle, traps] = await Promise.all([
+    fetchExercises("lats"),
+    fetchExercises("lower_back"),
+    fetchExercises("middle_back"),
+    fetchExercises("traps")
+  ]);
+  // Using concat method for combination
+  return [].concat(lats, lower, middle, traps);
+}
+
+// Version 2: Using array destructuring with spread operator
+async function fetchLegExercises() {
+  const [quads, hams, calves, glutes] = await Promise.all([
+    fetchExercises("quadriceps"),
+    fetchExercises("hamstrings"),
+    fetchExercises("calves"),
+    fetchExercises("glutes")
+  ]);
+  // Using spread operator for combination
+  return [].concat(lats, lower, middle, traps);
+}
 
 /* ========== UI FUNCTIONS ========== */
 function displayExercises(exercises) {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = exercises.map(ex => `
-        <div class="exercise" style="
-            background: #252525;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-        ">
-            <h4 style="color: #ff0000">${ex.name}</h4>
-            <p>Muscle: ${ex.muscle}</p>
-            <p>Type: ${ex.type}</p>
-            <p>Equipment: ${ex.equipment}</p>
-        </div>
-    `).join('');
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = exercises.map(ex => `
+    <div class="exercise" style="
+      background: #252525;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+    ">
+      <h4 style="color: #ff0000">${ex.name}</h4>
+      <p>Muscle: ${ex.muscle.replace('_', ' ')}</p>
+      <p>Type: ${ex.type}</p>
+      <p>Equipment: ${ex.equipment}</p>
+    </div>
+  `).join('');
 }
 
-function showError(message) {
-    const errorDiv = document.getElementById('error-message');
-    if (errorDiv) {
-        errorDiv.textContent = message;
-        errorDiv.classList.toggle('d-none', !message);
-    }
+function showError(message = '') {
+  const errorDiv = document.getElementById('error-message');
+  errorDiv.textContent = message;
+  errorDiv.classList.toggle('d-none', !message);
 }
 
 /* ========== MAIN FUNCTION ========== */
 async function searchExercises() {
-    showError('');
-    
-    const muscleSelect = document.getElementById('muscle-select');
-    const muscleKey = muscleSelect.value;
-    
-    if (!muscleKey) {
-        showError('Please select a muscle group');
-        return;
-    }
+  showError();
+  
+  const muscleKey = document.getElementById('muscle-select').value;
+  if (!muscleKey) {
+    showError('Please select a muscle group');
+    return;
+  }
 
-    // Map UI selection to API parameter
-    const apiMuscleParam = VALID_MUSCLES[muscleKey] || muscleKey;
+  try {
+    let exercises = [];
     
-    try {
-        const exercises = await fetchExercises(apiMuscleParam);
-        
-        if (!exercises?.length) {
-            showError(`No exercises found for ${muscleKey}`);
-            return;
-        }
-        
-        displayExercises(exercises);
-    } catch (error) {
-        showError('Exercise data unavailable. Please try again later.');
-        console.error('Search failed:', error);
+    if (muscleKey === 'back') {
+      exercises = await fetchBackExercises(); // Using destructuring+concat
+    } else if (muscleKey === 'legs') {
+      exercises = await fetchLegExercises(); // Using destructuring+spread
+    } else {
+      exercises = await fetchExercises(muscleKey); // Single muscle
     }
+    
+    if (!exercises.length) {
+      showError(`No exercises found for ${muscleKey}`);
+      return;
+    }
+    
+    displayExercises(exercises);
+  } catch (error) {
+    showError('Failed to load exercises. Please try again.');
+    console.error('Search error:', error);
+  }
 }
