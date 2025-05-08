@@ -1,11 +1,11 @@
-// API KEY - Same as original
+// API KEY
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 
 // ======================
-// CONSUMING REST API (GET)
+// CONSUMING REST API (GET) - From Screenshot
 // ======================
-async function fetchExercises(muscle) {
-  const url = `https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`;
+function fetchExercises(muscle) {
+  const url = 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle;
   const options = {
     method: 'GET',
     headers: { 'X-Api-Key': API_KEY }
@@ -14,78 +14,74 @@ async function fetchExercises(muscle) {
   // Using exact Promise pattern from screenshot
   let myPromise = new Promise(function(myResolve, myReject) {
     fetch(url, options)
-      .then(response => {
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+      .then(function(response) {
+        if (!response.ok) throw new Error('API Error: ' + response.status);
         return response.text();
       })
-      .then(text => myResolve(text))
-      .catch(error => myReject(error));
+      .then(function(text) { 
+        myResolve(text); 
+      })
+      .catch(function(error) { 
+        myReject(error); 
+      });
   });
 
-  // Consuming code as shown
   return myPromise.then(
     function(text) {
       const myObj = JSON.parse(text); // Manual parse per screenshot
       return myObj;
     },
     function(error) {
-      console.error(`Failed to fetch ${muscle}:`, error);
+      console.error('Failed to fetch ' + muscle + ':', error);
       return [];
     }
   );
 }
 
 // ======================
-// ASYNC/AWAIT PATTERN
+// ASYNC/AWAIT PATTERN - From Screenshot
 // ======================
 async function fetchBackExercises() {
-  // Using await syntax exactly as shown
   let latsExercises = await fetchExercises("lats");
   let lowerBackExercises = await fetchExercises("lower_back");
   let middleBackExercises = await fetchExercises("middle_back");
   let trapsExercises = await fetchExercises("traps");
 
-  // Combining objects
-  return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
+  return latsExercises.concat(lowerBackExercises, middleBackExercises, trapsExercises);
 }
 
 // ======================
-// DISPLAYING JSON DATA
+// DISPLAYING EXERCISES AS BUTTONS
 // ======================
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
   
-  // Using JSON.stringify() exactly as shown
-  if (exercises.length === 0) {
-    resultsDiv.innerHTML = JSON.stringify({ error: "No exercises found" });
-    return;
+  // Using string building from screenshot
+  let html = '';
+  for (let i = 0; i < exercises.length; i++) {
+    const ex = exercises[i];
+    html += '<button class="exercise-btn" onclick="window.location=\'instructions.html?name=' + 
+            ex.name.replace(/\s/g, '+') + '\'">' +
+            '<h4>' + ex.name + '</h4>' +
+            '<p>Muscle: ' + ex.muscle.replace('_', ' ') + '</p>' +
+            '<p>Type: ' + ex.type + '</p>' +
+            '<p>Equipment: ' + ex.equipment + '</p>' +
+            '</button>';
   }
-
-  // Building output per screenshot's loop pattern
-  let text = "";
-  for (const x in exercises) {
-    text += "<div class='exercise' style='background:#252525;padding:15px;margin:10px 0;border-radius:8px;cursor:pointer' onclick='window.location=\"instructions.html?name=" + 
-            exercises[x].name.replace(/\s/g, '+') + "\"'>" +
-            "<h4 style='color:#ff0000'>" + exercises[x].name + "</h4>" +
-            "<p>Muscle: " + exercises[x].muscle.replace('_', ' ') + "</p>" +
-            "<p>Type: " + exercises[x].type + "</p>" +
-            "<p>Equipment: " + exercises[x].equipment + "</p>" +
-            "</div>";
-  }
-  resultsDiv.innerHTML = text;
+  resultsDiv.innerHTML = html;
 }
 
 // ======================
-// ERROR HANDLING
+// ERROR HANDLING - Using JSON.stringify from screenshot
 // ======================
 function showError(message) {
   const errorDiv = document.getElementById('error-message');
   if (message) {
-    errorDiv.innerHTML = JSON.stringify({ error: message }); // Using stringify
-    errorDiv.classList.remove('d-none');
+    errorDiv.innerHTML = JSON.stringify({ error: message });
+    errorDiv.style.display = 'block';
   } else {
-    errorDiv.innerHTML = "";
-    errorDiv.classList.add('d-none');
+    errorDiv.innerHTML = '';
+    errorDiv.style.display = 'none';
   }
 }
 
@@ -106,10 +102,13 @@ async function searchExercises() {
     
     if (muscleKey === 'back') {
       exercises = await fetchBackExercises();
-    } else if (muscleKey === 'legs') {
-      exercises = await fetchLegExercises();
     } else {
       exercises = await fetchExercises(muscleKey);
+    }
+    
+    if (exercises.length === 0) {
+      showError('No exercises found for ' + muscleKey);
+      return;
     }
     
     displayExercises(exercises);
@@ -120,11 +119,11 @@ async function searchExercises() {
 }
 
 // ======================
-// INSTRUCTIONS PAGE
+// INSTRUCTIONS PAGE - Using property access from screenshot
 // ======================
 async function loadExerciseDetails() {
   const params = new URLSearchParams(window.location.search);
-  const exerciseName = params.get('name')?.replace(/\+/g, ' ');
+  const exerciseName = params.get('name').replace(/\+/g, ' ');
 
   if (!exerciseName) {
     document.getElementById('exercise-container').innerHTML = 
@@ -134,10 +133,11 @@ async function loadExerciseDetails() {
 
   try {
     const allExercises = await fetchAllExercises();
-    const exercise = allExercises.find(ex => ex.name === exerciseName);
+    const exercise = allExercises.find(function(ex) { 
+      return ex["name"] === exerciseName; // Using bracket notation from screenshot
+    });
     
     if (exercise) {
-      // Using manual property access per screenshot
       document.getElementById('ex-name').textContent = exercise["name"];
       document.getElementById('ex-type').textContent = exercise["type"] || 'N/A';
       document.getElementById('ex-equipment').textContent = exercise["equipment"] || 'N/A';
@@ -147,7 +147,7 @@ async function loadExerciseDetails() {
       if (exercise["instructions"]) {
         instructionsList.innerHTML = exercise["instructions"]
           .split('\n')
-          .map(step => `<li>${step}</li>`)
+          .map(function(step) { return '<li>' + step + '</li>'; })
           .join('');
       }
     } else {
@@ -158,4 +158,22 @@ async function loadExerciseDetails() {
     document.getElementById('exercise-container').innerHTML = 
       JSON.stringify({ error: "Failed to load details" });
   }
+}
+
+// Helper function
+async function fetchAllExercises() {
+  const muscles = ['chest', 'back', 'shoulders', 'biceps', 'triceps', 'legs'];
+  let allExercises = [];
+  
+  for (let i = 0; i < muscles.length; i++) {
+    const exercises = await fetchExercises(muscles[i]);
+    allExercises = allExercises.concat(exercises);
+  }
+  
+  return allExercises;
+}
+
+// Initialize instructions page
+if (window.location.href.indexOf('instructions.html') > -1) {
+  loadExerciseDetails();
 }
