@@ -1,6 +1,4 @@
-// Get your API key from api-ninjas.com
-const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m
-";
+const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 
 document.getElementById('search-btn').addEventListener('click', async () => {
   const muscle = document.getElementById('muscle-select').value;
