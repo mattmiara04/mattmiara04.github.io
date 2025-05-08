@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exercise Instructions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #121212;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        .exercise-detail {
+            background: #252525;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+        .exercise-title {
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            background: #cc0000;
+            color: white;
+            margin-top: 20px;
+        }
+        .btn-back:hover {
+            background: #ff0000;
+        }
+        .muscle-badge {
+            background: #cc0000;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="planner.html" class="btn btn-back">← Back to Planner</a>
+        <div id="exercise-container" class="exercise-detail">
+            <h2 class="exercise-title" id="ex-name">Loading Exercise...</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Type:</strong> <span id="ex-type"></span></p>
+                    <p><strong>Equipment:</strong> <span id="ex-equipment"></span></p>
+                    <p><strong>Difficulty:</strong> <span id="ex-difficulty"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Primary Muscle:</strong> <span class="badge muscle-badge" id="ex-muscle"></span></p>
+                    <p><strong>Secondary Muscles:</strong> <span id="ex-secondary"></span></p>
+                </div>
+            </div>
+            <hr>
+            <h4>Instructions</h4>
+            <ol id="ex-instructions"></ol>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
