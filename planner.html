@@ -41,6 +41,7 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+            width: 100%;
         }
         .search-btn {
             margin: 0;
@@ -64,32 +65,31 @@
             margin-top: 15px;
             display: none;
         }
-        .exercise {
-            background: #252525;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 1px solid #333;
-            transition: all 0.2s;
-        }
-        .exercise:hover {
-            border-color: #ff0000;
-            transform: translateY(-2px);
-        }
-        .exercise h4 {
-            color: #ff0000;
-        }
-        .instructions-box {
+        .content-box {
             background: #252525;
             padding: 20px;
+            margin: 15px 0;
             border-radius: 8px;
             border: 1px solid #333;
-            text-align: center;
-            margin-top: 20px;
         }
-        .instructions-box p {
-            margin-bottom: 5px;
+        .instructions-box {
+            text-align: center;
+        }
+        .workout-box {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .workout-box:hover {
+            border-color: #ff0000;
+            transform: translateY(-3px);
+        }
+        .workout-title {
+            color: #ff0000;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .workout-detail {
+            margin: 8px 0;
         }
     </style>
 </head>
@@ -115,7 +115,7 @@
             </div>
             <div id="error-message"></div>
             <div id="results">
-                <div class="instructions-box">
+                <div class="content-box instructions-box">
                     <p>1. Please select a muscle group</p>
                     <p>2. Click SEARCH to view exercises</p>
                     <p>3. Click on any workout to view instructions</p>
@@ -125,6 +125,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="app.js"></script>
+    <script>
 </body>
 </html>
