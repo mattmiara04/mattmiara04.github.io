@@ -1,13 +1,13 @@
-/* ========== API CONFIGURATION ========== */
+//API KEY
 const API_KEY = "SB4EC0pmfS3A9aIsz9RvBA==e4495G4sfBnbZw0m";
 
-/* ========== CORE FUNCTIONS ========== */
+//Fetch
 async function fetchExercises(muscle) {
   try {
     const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
       headers: { 'X-Api-Key': API_KEY }
     });
-    
+//Error Handling    
     if (!response.ok) throw new Error(`API Error: ${response.status}`);
     return await response.json();
   } catch (error) {
@@ -16,7 +16,7 @@ async function fetchExercises(muscle) {
   }
 }
 
-// Fetch all back exercises (lats, lower_back, middle_back, traps)
+// Fetch Back
 async function fetchBackExercises() {
   const [latsExercises, lowerBackExercises, middleBackExercises, trapsExercises] = await Promise.all([
     fetchExercises("lats"),
@@ -27,7 +27,7 @@ async function fetchBackExercises() {
   return [...latsExercises, ...lowerBackExercises, ...middleBackExercises, ...trapsExercises];
 }
 
-// Fetch all leg exercises (quadriceps, hamstrings, calves, glutes)
+// Fetch Leg
 async function fetchLegExercises() {
   const [quadsExercises, hamsExercises, calvesExercises, glutesExercises] = await Promise.all([
     fetchExercises("quadriceps"),
@@ -38,7 +38,7 @@ async function fetchLegExercises() {
   return [...quadsExercises, ...hamsExercises, ...calvesExercises, ...glutesExercises];
 }
 
-/* ========== UI FUNCTIONS ========== */
+//Display
 function displayExercises(exercises) {
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = exercises.map(ex => `
@@ -64,7 +64,7 @@ function showError(message = '') {
   }
 }
 
-/* ========== MAIN FUNCTION ========== */
+//Search
 async function searchExercises() {
   showError();
   
